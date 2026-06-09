@@ -5,6 +5,8 @@ Student Information
 
 Name: Salimu Nelson Sichalwe 
 
+registration number: 14323042/T.24
+
 Programme: Bachelor of Science in Information and Communication Technology  with Business (BSc ICT-B II)
 
 Institution: Mzumbe University
