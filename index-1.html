@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduPortal — School Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-left">
+      <div class="logo">Edu<span>Portal</span></div>
+      <div class="tagline">A complete school management solution for students, teachers, and administrators.</div>
+      <div class="pills">
+        <div class="pill"><div class="dot"></div>Student &amp; Teacher Management</div>
+        <div class="pill"><div class="dot"></div>Grades &amp; Results Tracking</div>
+        <div class="pill"><div class="dot"></div>Attendance Monitoring</div>
+        <div class="pill"><div class="dot"></div>Notice Board &amp; Announcements</div>
+      </div>
+    </div>
+    <div class="login-right">
+      <h2>Welcome Back</h2>
+      <p>Sign in to access your school portal</p>
+      <label class="flbl">Role</label>
+      <select class="finput" id="roleSelect">
+        <option value="admin">Admin</option>
+        <option value="teacher">Teacher</option>
+        <option value="student">Student</option>
+      </select>
+      <label class="flbl">Username</label>
+      <input class="finput" type="text" id="userInput" placeholder="Enter username" />
+      <label class="flbl">Password</label>
+      <input class="finput" type="password" id="passInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')login()" />
+      <button class="btn-login" onclick="login()">Sign In →</button>
+      <p class="login-hint">Demo · Any credentials · Password: any</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ══════════════════════════════════════════ -->
+<div id="app">
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-logo">Edu<span>Portal</span><small>School Management System</small></div>
+      <nav class="sb-nav" id="sideNav"></nav>
+      <div class="sb-bottom">
+        <div class="sb-avatar" id="sbAv">A</div>
+        <div class="sb-info">
+          <div class="uname" id="sbName">Admin</div>
+          <div class="urole" id="sbRole">Administrator</div>
+        </div>
+        <button class="sb-logout" onclick="logout()" title="Logout">⏻</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <div class="topbar">
+        <div class="page-title" id="pageTitle">Dashboard</div>
+        <div class="date" id="topDate"></div>
+      </div>
+      <div class="inner">
+
+        <!-- DASHBOARD -->
+        <div class="section" id="sec-dashboard">
+          <div class="stats">
+            <div class="s-card blue"><div class="icon">👨‍🎓</div><div><div class="val" id="dStudents">0</div><div class="lbl">Total Students</div></div></div>
+            <div class="s-card green"><div class="icon">👩‍🏫</div><div><div class="val" id="dTeachers">0</div><div class="lbl">Teachers</div></div></div>
+            <div class="s-card yellow"><div class="icon">📚</div><div><div class="val" id="dClasses">6</div><div class="lbl">Classes</div></div></div>
+            <div class="s-card red"><div class="icon">📢</div><div><div class="val" id="dNotices">0</div><div class="lbl">Notices</div></div></div>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header"><h3>Recent Students</h3></div>
+              <div class="tbl-wrap">
+                <table><thead><tr><th>Name</th><th>Class</th><th>Status</th></tr></thead>
+                <tbody id="dashStudents"></tbody></table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Latest Notices</h3></div>
+              <div id="dashNotices"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Class Attendance Overview</h3></div>
+            <div id="attOverview" style="display:flex;flex-direction:column;gap:14px;"></div>
+          </div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div class="section" id="sec-students">
+          <div class="card">
+            <div class="card-header"><h3>Add New Student</h3></div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Full Name</label><input class="finput" type="text" id="sName" placeholder="e.g. John Mwamba" /></div>
+              <div class="fg"><label class="flbl">Student ID</label><input class="finput" type="text" id="sId" placeholder="e.g. STU-2025-001" /></div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Class</label>
+                <select class="finput" id="sClass">
+                  <option>Form 1A</option><option>Form 1B</option><option>Form 2A</option>
+                  <option>Form 2B</option><option>Form 3A</option><option>Form 4A</option>
+                </select>
+              </div>
+              <div class="fg"><label class="flbl">Gender</label>
+                <select class="finput" id="sGender"><option>Male</option><option>Female</option></select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Parent / Guardian Name</label><input class="finput" type="text" id="sParent" placeholder="Parent name" /></div>
+              <div class="fg"><label class="flbl">Phone Number</label><input class="finput" type="text" id="sPhone" placeholder="+255 700 000 000" /></div>
+            </div>
+            <button class="btn btn-primary" onclick="addStudent()">+ Enroll Student</button>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>All Students</h3>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <input class="search-bar" placeholder="🔍 Search students..." oninput="renderStudents(this.value)" />
+                <select class="search-bar" style="min-width:130px" onchange="filterStudentClass(this.value)">
+                  <option value="">All Classes</option>
+                  <option>Form 1A</option><option>Form 1B</option><option>Form 2A</option>
+                  <option>Form 2B</option><option>Form 3A</option><option>Form 4A</option>
+                </select>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>Student</th><th>ID</th><th>Class</th><th>Gender</th><th>Parent</th><th>Phone</th><th>Status</th><th></th></tr></thead>
+                <tbody id="studentsTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TEACHERS -->
+        <div class="section" id="sec-teachers">
+          <div class="card">
+            <div class="card-header"><h3>Add Teacher</h3></div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Full Name</label><input class="finput" type="text" id="tName" placeholder="e.g. Mrs. Amina Hassan" /></div>
+              <div class="fg"><label class="flbl">Employee ID</label><input class="finput" type="text" id="tId" placeholder="e.g. TCH-001" /></div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Subject</label><input class="finput" type="text" id="tSubject" placeholder="e.g. Mathematics" /></div>
+              <div class="fg"><label class="flbl">Phone</label><input class="finput" type="text" id="tPhone" placeholder="+255 700 000 000" /></div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Assigned Class</label>
+                <select class="finput" id="tClass">
+                  <option>Form 1A</option><option>Form 1B</option><option>Form 2A</option>
+                  <option>Form 2B</option><option>Form 3A</option><option>Form 4A</option>
+                </select>
+              </div>
+              <div class="fg"><label class="flbl">Qualification</label><input class="finput" type="text" id="tQual" placeholder="e.g. B.Ed Mathematics" /></div>
+            </div>
+            <button class="btn btn-primary" onclick="addTeacher()">+ Add Teacher</button>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>All Teachers</h3>
+              <input class="search-bar" placeholder="🔍 Search teachers..." oninput="renderTeachers(this.value)" />
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>Teacher</th><th>ID</th><th>Subject</th><th>Class</th><th>Phone</th><th>Qualification</th><th>Status</th><th></th></tr></thead>
+                <tbody id="teachersTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRADES -->
+        <div class="section" id="sec-grades">
+          <div class="card">
+            <div class="card-header"><h3>Enter Grades</h3></div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Student</label><select class="finput" id="gStudent"></select></div>
+              <div class="fg"><label class="flbl">Subject</label>
+                <select class="finput" id="gSubject">
+                  <option>Mathematics</option><option>English</option><option>Kiswahili</option>
+                  <option>Science</option><option>History</option><option>Geography</option>
+                  <option>Civics</option><option>Biology</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Score (0–100)</label><input class="finput" type="number" id="gScore" min="0" max="100" placeholder="e.g. 85" /></div>
+              <div class="fg"><label class="flbl">Term</label>
+                <select class="finput" id="gTerm">
+                  <option>Term 1</option><option>Term 2</option><option>Term 3</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="addGrade()">Save Grade</button>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Grade Records</h3>
+              <input class="search-bar" placeholder="🔍 Search by student..." oninput="renderGrades(this.value)" />
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>Student</th><th>Class</th><th>Subject</th><th>Score</th><th>Grade</th><th>Term</th><th>Remarks</th></tr></thead>
+                <tbody id="gradesTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ATTENDANCE -->
+        <div class="section" id="sec-attendance">
+          <div class="card">
+            <div class="card-header">
+              <h3>Mark Attendance</h3>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <select class="search-bar" style="min-width:130px" id="attClass" onchange="renderAttCards()">
+                  <option>Form 1A</option><option>Form 1B</option><option>Form 2A</option>
+                  <option>Form 2B</option><option>Form 3A</option><option>Form 4A</option>
+                </select>
+                <input class="search-bar" type="date" id="attDate" />
+                <button class="btn btn-success" onclick="saveAttendance()">✅ Save Attendance</button>
+              </div>
+            </div>
+            <div class="att-grid" id="attCards"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Attendance Log</h3></div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Class</th><th>Present</th><th>Absent</th><th>Rate</th></tr></thead>
+                <tbody id="attLog"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTICE BOARD -->
+        <div class="section" id="sec-notices">
+          <div class="card" id="noticeFormCard">
+            <div class="card-header"><h3>Post New Notice</h3></div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Title</label><input class="finput" type="text" id="nTitle" placeholder="Notice title" /></div>
+              <div class="fg"><label class="flbl">Type</label>
+                <select class="finput" id="nType">
+                  <option value="info">Information</option>
+                  <option value="urgent">Urgent</option>
+                  <option value="general">General</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg" style="margin-bottom:14px">
+              <label class="flbl">Message</label>
+              <textarea class="finput" id="nBody" rows="3" placeholder="Write notice content here..." style="resize:vertical;"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="addNotice()">📢 Post Notice</button>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>All Notices</h3></div>
+            <div id="noticeList"></div>
+          </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="section" id="sec-settings">
+          <div class="card">
+            <div class="card-header"><h3>School Information</h3></div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">School Name</label><input class="finput" type="text" id="setSchool" value="Kariakoo Secondary School" /></div>
+              <div class="fg"><label class="flbl">School Code</label><input class="finput" type="text" id="setCode" value="KSS-2025" /></div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Location</label><input class="finput" type="text" id="setLoc" value="Dar es Salaam, Tanzania" /></div>
+              <div class="fg"><label class="flbl">Phone</label><input class="finput" type="text" id="setPhone" value="+255 22 000 0000" /></div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label class="flbl">Email</label><input class="finput" type="email" id="setEmail" value="info@kariakoo.edu.tz" /></div>
+              <div class="fg"><label class="flbl">Academic Year</label><input class="finput" type="text" id="setYear" value="2025 / 2026" /></div>
+            </div>
+            <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Preferences</h3></div>
+            <div class="setting-row">
+              <div><div class="s-label">Email Notifications</div><div class="s-desc">Receive alerts for new students and notices</div></div>
+              <span class="badge ok">Enabled</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="s-label">Auto Attendance Reminder</div><div class="s-desc">Send daily reminder to teachers at 7:30 AM</div></div>
+              <span class="badge ok">Enabled</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="s-label">Report Generation</div><div class="s-desc">Generate end-of-term reports automatically</div></div>
+              <span class="badge warn">Scheduled</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Developer Info</h3></div>
+            <div class="setting-row">
+              <div><div class="s-label">Developed By</div><div class="s-desc">Project Author</div></div>
+              <span style="font-weight:700;color:var(--accent)">Salimu Nelson</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="s-label">Technology Stack</div><div class="s-desc">Languages used</div></div>
+              <span class="badge info">HTML · CSS · JavaScript</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="s-label">Version</div><div class="s-desc">Current release</div></div>
+              <span class="badge ok">v1.0.0</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="s-label">GitHub</div><div class="s-desc">Source code repository</div></div>
+              <span style="font-weight:700;color:var(--accent)">github.com/salimu-nelson/eduportal</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.inner -->
+    </div><!-- /.main-content -->
+  </div><!-- /.layout -->
+</div><!-- /#app -->
+
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
